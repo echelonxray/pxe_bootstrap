@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: 0BSD
+#
+# Copyright (C) 2023 Michael T. Kloos <michael@michaelkloos.com>
+#
+
+/image.elf
+/image.elf.bin
+/image.elf.bin.img
+
+*.o
+*.d
