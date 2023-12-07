@@ -6,7 +6,7 @@
 #include "main.h"
 #include <printm.h>
 
-void c_func() {
+void main() {
 	printm("Hello, World!\n");
 	printm("ABC\n");
 	return;

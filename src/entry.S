@@ -21,7 +21,7 @@ my_entry_pt:
 	#movw $0x7000, %AX
 	mov %AX, %SS
 	movw $0xFFF0, %SP
-	calll c_func
+	calll main
 	1: jmp 1b
 
 biosprintchar:
