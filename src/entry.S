@@ -4,7 +4,7 @@
  */
 
 /*
-32-bit x86 ABI
+32-bit x86 ABI (Same for 16-bit)
 	%ax - caller saved
 	%bx - callee-saved
 	%cx - caller saved
@@ -58,8 +58,8 @@ a20_enabled:
 	xor %EAX, %EAX
 	mov a20check, %AX
 	add $0x7C00, %AX // We are telling the linker that we are at base address 0, even though this is actually at 0x7C00.
-	                // Ordinarly we correct this with the segment registers.  But since we are temporarily changing them,
-	                // we need to manually correct the memory offset.
+	                 // Ordinarly we correct this with the segment registers.  But since we are temporarily changing them,
+	                 // we need to manually correct the memory offset.
 	xor %EDX, %EDX
 	mov $0x1, %DI
 	cli
@@ -71,17 +71,19 @@ a20_enabled:
 	movw %FS:(%EAX), %BX
 	movw %GS:(%EDX), %CX
 	cmp %BX,%CX
-	jnz 1f // a20 Enabled (Not Equal).
-		// Equal, but we need to double check that this is not a coincidence.
+	jnz 1f // Not Equal (a20 Enabled)
+		// Equal
+		// But we need to double check that this is not a coincidence.
 		// So, write a different value and see if it still matches.
 		mov $0x4321, %SI
 		movw %SI, %FS:(%EAX)
 		movw %GS:(%EDX), %CX
 		cmp %SI,%CX
-		jnz 1f // a20 Enabled (Not Equal).  It was a coincidence.
-			// a20 is Disabled. (Equal)
+		jnz 1f // Not Equal (a20 Enabled) - It was a coincidence.
+			// Equal
+			// a20 is Disabled.
 			xor %DI, %DI
-	1:     // a20 Enabled
+	1:
 	movw %BX, %FS:(%EAX)
 	mov %DI, %AX
 	pop %GS
