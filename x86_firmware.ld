@@ -1,3 +1,8 @@
+/* SPDX-License-Identifier: 0BSD */
+/*
+ * Copyright (C) 2023 Michael T. Kloos <michael@michaelkloos.com>
+ */
+
 /*
 This is not actually needed (At least not on actual hardware.), but 
 it explicitly sets the entry point in the .elf file to be the same 

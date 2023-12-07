@@ -1,3 +1,8 @@
+# SPDX-License-Identifier: 0BSD
+#
+# Copyright (C) 2023 Michael T. Kloos <michael@michaelkloos.com>
+#
+
 CROSS_COMPILE  := 
 CC             := $(CROSS_COMPILE)gcc
 OBJCPY         := $(CROSS_COMPILE)objcopy
