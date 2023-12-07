@@ -1,13 +1,18 @@
 CROSS_COMPILE  := 
 CC             := $(CROSS_COMPILE)gcc
 OBJCPY         := $(CROSS_COMPILE)objcopy
-CFLAGS         := -Wall -Wextra -m16 -std=c99 -MMD -O1 -g -ffreestanding -nostdlib -nostartfiles -fno-pie
+CFLAGS         := -Wall -Wextra -m16 -std=c99 -MMD -O2 -g -ffreestanding -nostdlib -nostdinc -nostartfiles -fno-pie -I./src
 LDFLAGS        := -T x86_firmware.ld -static -no-pie
 OUT            := image.elf
 FILES          := 
 
-FILES   := $(FILES) entry.o
-FILES   := $(FILES) main.o
+FILES   := $(FILES) src/entry.o
+FILES   := $(FILES) src/main.o
+FILES   := $(FILES) src/printm.o
+FILES   := $(FILES) src/string.o
+FILES   := $(FILES) src/math.o
+
+FILES_BASE := $(basename $(FILES))
 
 .PHONY: all rebuild clean linkerdeps
 
@@ -17,7 +22,9 @@ rebuild: clean
 	$(MAKE) all
 
 clean:
-	rm -f $(FILES) $(OUT) $(OUT).bin $(OUT).bin.img *.d
+	rm -f $(OUT) $(OUT).bin $(OUT).bin.img
+	rm -f $(FILES)
+	rm -f $(addsuffix .d,$(FILES_BASE))
 
 %.o: %.c
 	$(CC) $(CFLAGS) $< -c -o $@

@@ -3,7 +3,7 @@
 .code16
 
 .global my_entry_pt
-.global printchar
+.global biosprintchar
 
 my_entry_pt:
 	xor %EAX, %EAX
@@ -13,13 +13,13 @@ my_entry_pt:
 	mov %AX, %ES
 	mov %AX, %FS
 	mov %AX, %GS
-	movw $0x7000, %AX
+	#movw $0x7000, %AX
 	mov %AX, %SS
 	movw $0xFFF0, %SP
 	calll c_func
 	1: jmp 1b
 
-printchar:
+biosprintchar:
 	xor  %EAX, %EAX
 	xor  %ECX, %ECX
 	xor  %EDX, %EDX
