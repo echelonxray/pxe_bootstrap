@@ -3,6 +3,7 @@
  * Copyright (C) 2023 Michael T. Kloos <michael@michaelkloos.com>
  */
 
+#include "main.h"
 #include <printm.h>
 
 void c_func() {
