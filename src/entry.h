@@ -7,5 +7,6 @@
 #define _HEADER_ENTRY_H
 
 void biosprintchar(char c);
+unsigned short a20_enabled();
 
 #endif

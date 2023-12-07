@@ -4,10 +4,13 @@
  */
 
 #include "main.h"
+#include <entry.h>
 #include <printm.h>
 
 void main() {
 	printm("Hello, World!\n");
-	printm("ABC\n");
+	printm("ABC-0 %u\n", (unsigned int)a20_enabled());
+	printm("ABC-1 %u\n", (unsigned int)0);
+	printm("ABC-2 %u\n", (unsigned int)1);
 	return;
 }

@@ -6,7 +6,8 @@
 CROSS_COMPILE  := 
 CC             := $(CROSS_COMPILE)gcc
 OBJCPY         := $(CROSS_COMPILE)objcopy
-CFLAGS         := -Wall -Wextra -m16 -std=c99 -MMD -O2 -g -ffreestanding -nostdlib -nostdinc -nostartfiles -fno-pie -I./src
+OBJDMP         := $(CROSS_COMPILE)objdump
+CFLAGS         := -Wall -Wextra -m16 -std=c99 -MMD -O0 -g -ffreestanding -nostdlib -nostdinc -nostartfiles -fno-pie -I./src
 LDFLAGS        := -T x86_firmware.ld -static -no-pie
 OUT            := image.elf
 FILES          := 
@@ -50,3 +51,6 @@ copy: $(OUT).bin
 	sudo cp $< /var/tftproot/pxe_bootfile.bin
 
 -include *.d
+
+objdump: image.elf
+	$(OBJDMP) -M no-aliases -m i8086 -D image.elf | less
