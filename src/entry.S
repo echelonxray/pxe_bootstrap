@@ -168,8 +168,8 @@ get_biosmemorymap:
 	
 	2: // Clean Up
 	add $0x1D, %SP
-	//xor %EAX, %EAX
-	//mov %SI, %AX
+	xor %EAX, %EAX
+	mov %SI, %AX
 	pop %DI
 	pop %SI
 	pop %EBP
