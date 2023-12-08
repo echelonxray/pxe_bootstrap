@@ -107,7 +107,10 @@ a20_enabled:
 	retl
 
 get_biosmemorymap:
-	movl 0x4(%ESP), %EAX
+	pushf
+	cli
+	sub $0x2, %ESP
+	movl 0x8(%ESP), %EAX
 	push %EBX
 	push %EBP
 	push %SI
@@ -115,23 +118,25 @@ get_biosmemorymap:
 	push %EAX
 	xor %EBP, %EBP
 	xor %SI, %SI
-	sub $0x18, %SP
+	sub $0x1C, %ESP
 	mov %SP, %DI
-	sub $0x1, %SP
+	sub $0x1, %ESP
 	
 	xor %EBX, %EBX
 	movl $0x534D4150, %EDX
 	3:
 	movl $0xE820, %EAX
 	movl $0x18, %ECX
+	clc
 	int $0x15
+	jc 4f // Goto: End of list
 	cmp $0x534D4150, %EAX
 	jnz 1f // Goto: Error
 	cmp $0x0, %EBX
 	jz 4f // Goto: End of list
 	movb %CL, (%ESP)
 	// Get Pointer
-	movl 0x19(%ESP), %EAX
+	movl 0x1D(%ESP), %EAX
 	cmp $0x0, %EAX
 	jz 5f // Pointer is NULL, skip the data copy.
 	// Copy Entry
@@ -152,14 +157,14 @@ get_biosmemorymap:
 	movl %ECX, 0x14(%EAX)
 	// Increment Pointer
 	add $0x18, %EAX
-	movl %EAX, 0x19(%ESP)
+	movl %EAX, 0x1D(%ESP)
 	5:
 	inc %BP
 	jmp 3b
 	
 	4: // End of list
 	// Store Count (%BP)
-	movl 0x35(%ESP), %EAX
+	movl 0x3D(%ESP), %EAX
 	cmp $0x0, %EAX
 	jz 6f // Pointer is NULL, skip the store count.
 	movl %EBP, (%EAX)
@@ -167,9 +172,10 @@ get_biosmemorymap:
 	cmp $0x0, %BP
 	jz 2f
 	// Store Entry Size (%CL)
-	movl 0x31(%ESP), %EAX
+	movl 0x39(%ESP), %EAX
 	cmp $0x0, %EAX
 	jz 2f // Pointer is NULL, skip the entry size.
+	movb (%ESP), %CL
 	movzbl %CL, %ECX
 	movl %ECX, (%EAX)
 	jmp 2f
@@ -178,13 +184,15 @@ get_biosmemorymap:
 	mov $0x1, %SI
 	
 	2: // Clean Up
-	add $0x1D, %SP
+	add $0x21, %ESP
 	mov %SI, %AX
 	movzwl %AX, %EAX
 	pop %DI
 	pop %SI
 	pop %EBP
 	pop %EBX
+	add $0x2, %ESP
+	popf
 	retl
 
 a20check: .short 0x1234

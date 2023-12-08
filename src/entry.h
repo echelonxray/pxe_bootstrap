@@ -17,6 +17,6 @@ typedef struct {
 
 void biosprintchar(char c);
 unsigned short a20_enabled();
-unsigned short get_biosmemorymap(BiosMemoryEntry* entries, unsigned int* entry_size, unsigned int* count);
+unsigned int get_biosmemorymap(BiosMemoryEntry* entries, unsigned int* entry_size, unsigned int* count);
 
 #endif

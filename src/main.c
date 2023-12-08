@@ -26,11 +26,9 @@ void main() {
 	unsigned short retval;
 	retval = get_biosmemorymap(NULL, &entry_size, &count);
 	if (retval) {
-		printm("get_biosmemorymap(): Error\n");
+		printm("get_biosmemorymap(): Error 0x%08X\n", retval);
 		return;
 	}
-	printm("Memory Entry Count: %u\n", count);
-	printm("Memory Entry Size:  %u\n", entry_size);
 	BiosMemoryEntry* mementries;
 	mementries = malloc(sizeof(*mementries) * count);
 	if (mementries == NULL) {
@@ -45,10 +43,10 @@ void main() {
 	printm("Memory Entry Size:  %u\n", entry_size);
 	printm("Memory Entries\n");
 	for (unsigned int i = 0; i < count; i++) {
-		printm("\tEntry: 0x%08X | 0x%08X | 0x%08X | 0x%08X\n", (unsigned int)mementries[i].base_address, 
-		                                                       (unsigned int)mementries[i].length, 
-		                                                       (unsigned int)mementries[i].type, 
-		                                                       (unsigned int)mementries[i].extended_attributes);
+		printm("  Entry: 0x%016llX | 0x%016llX | 0x%08X | 0x%08X\n", mementries[i].base_address, 
+		                                                             mementries[i].length, 
+		                                                             mementries[i].type, 
+		                                                             mementries[i].extended_attributes);
 	}
 	
 	free(mementries);
