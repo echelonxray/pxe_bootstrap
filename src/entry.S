@@ -5,6 +5,8 @@
 
 /*
 32-bit x86 ABI (Same for 16-bit)
+	Parameters are passed on the stack in reverse order
+	
 	%ax - caller saved
 	%bx - callee-saved
 	%cx - caller saved
@@ -34,6 +36,15 @@ my_entry_pt:
 	mov %AX, %GS
 	mov %AX, %SS
 	movw $0xFFF0, %SP
+	mov $HEAP_START, %AX
+	mov $HEAP_END, %BX
+	movzwl %AX, %EAX
+	movzwl %BX, %EBX
+	sub $0x8,%ESP
+	push %EBX
+	push %EAX
+	calll __allocinit
+	add $0x10,%ESP
 	calll main
 	1: jmp 1b
 
@@ -168,8 +179,8 @@ get_biosmemorymap:
 	
 	2: // Clean Up
 	add $0x1D, %SP
-	xor %EAX, %EAX
 	mov %SI, %AX
+	movzwl %AX, %EAX
 	pop %DI
 	pop %SI
 	pop %EBP

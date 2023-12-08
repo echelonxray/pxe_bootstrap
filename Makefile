@@ -122,6 +122,7 @@ FILES   := $(FILES) src/main.o
 FILES   := $(FILES) src/printm.o
 FILES   := $(FILES) src/string.o
 FILES   := $(FILES) src/math.o
+FILES   := $(FILES) src/memalloc.o
 
 FILES_BASE := $(basename $(FILES))
 

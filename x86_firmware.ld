@@ -68,18 +68,23 @@ SECTIONS
 	/*
 	Next, make room for the global variables in RAM.
 	*/
+	/*
 	.sdata : {
 		*.o (.sdata);
 	} > ram
 	.data : {
 		*.o (.data);
 	} > ram
+	*/
 	.sbss : {
 		*.o (.sbss);
-	}
+	} > ram
 	.bss : {
 		*.o (.bss);
-	}
+	} > ram
+	
+	HEAP_START = (. + 0x10) & ~0xF;
+	HEAP_END   = 0xF000;
 	
 	.shstrtab : {
 		* (.shstrtab);
