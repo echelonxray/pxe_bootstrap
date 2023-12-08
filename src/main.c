@@ -37,9 +37,7 @@ void main() {
 		printm("malloc(): Error\n");
 		return;
 	}
-	printm("HereA\n");
 	memset(mementries, 0, sizeof(*mementries) * count);
-	printm("HereB\n");
 	retval = get_biosmemorymap(mementries, &entry_size, &count);
 	
 	printm("\n");
