@@ -5,12 +5,25 @@
 
 #include "main.h"
 #include <entry.h>
+#include <types.h>
 #include <printm.h>
 
 void main() {
 	printm("Hello, World!\n");
-	printm("ABC-0 %u\n", (unsigned int)a20_enabled());
-	printm("ABC-1 %u\n", (unsigned int)0);
-	printm("ABC-2 %u\n", (unsigned int)1);
+	char* answer;
+	if (a20_enabled()) {
+		answer = "Yes";
+	} else {
+		answer = "No";
+	}
+	printm("Is a20 Enabled? %s\n", answer);
+	unsigned int count = 1234;
+	unsigned short retval;
+	retval = get_biosmemorymap(NULL, NULL, &count);
+	if (retval) {
+		printm("get_biosmemorymap(): Error\n");
+		return;
+	}
+	printm("Memory Entry Count: %u\n", count);
 	return;
 }

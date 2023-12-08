@@ -22,6 +22,7 @@
 .global my_entry_pt
 .global biosprintchar
 .global a20_enabled
+.global get_biosmemorymap
 
 my_entry_pt:
 	xor %EAX, %EAX
@@ -92,6 +93,87 @@ a20_enabled:
 	pop %SI
 	pop %BX
 	popf
+	retl
+
+get_biosmemorymap:
+	movl 0x4(%ESP), %EAX
+	push %EBX
+	push %EBP
+	push %SI
+	push %DI
+	push %EAX
+	xor %EBP, %EBP
+	xor %SI, %SI
+	sub $0x18, %SP
+	mov %SP, %DI
+	sub $0x1, %SP
+	
+	xor %EBX, %EBX
+	movl $0x534D4150, %EDX
+	3:
+	movl $0xE820, %EAX
+	movl $0x18, %ECX
+	int $0x15
+	cmp $0x534D4150, %EAX
+	jnz 1f // Goto: Error
+	cmp $0x0, %EBX
+	jz 4f // Goto: End of list
+	movb %CL, (%ESP)
+	// Get Pointer
+	movl 0x19(%ESP), %EAX
+	cmp $0x0, %EAX
+	jz 5f // Pointer is NULL, skip the data copy.
+	// Copy Entry
+	// 1st: 8 Bytes
+	movl 0x01(%ESP), %ECX
+	movl %ECX, 0x00(%EAX)
+	movl 0x05(%ESP), %ECX
+	movl %ECX, 0x04(%EAX)
+	// 2nd: 8 Bytes
+	movl 0x09(%ESP), %ECX
+	movl %ECX, 0x08(%EAX)
+	movl 0x0D(%ESP), %ECX
+	movl %ECX, 0x0C(%EAX)
+	// 3rd: 8 Bytes
+	movl 0x11(%ESP), %ECX
+	movl %ECX, 0x10(%EAX)
+	movl 0x15(%ESP), %ECX
+	movl %ECX, 0x14(%EAX)
+	// Increment Pointer
+	add $0x18, %EAX
+	movl %EAX, 0x19(%ESP)
+	5:
+	inc %BP
+	jmp 3b
+	
+	4: // End of list
+	// Store Count (%BP)
+	movl 0x35(%ESP), %EAX
+	cmp $0x0, %EAX
+	jz 6f // Pointer is NULL, skip the store count.
+	movl %EBP, (%EAX)
+	6:
+	cmp $0x0, %BP
+	jz 2f
+	// Store Entry Size (%CL)
+	movl 0x31(%ESP), %EAX
+	cmp $0x0, %EAX
+	jz 2f // Pointer is NULL, skip the entry size.
+	movzbl %CL, %ECX
+	movl %ECX, (%EAX)
+	jmp 2f
+	
+	1: // Error
+	mov $0x1, %SI
+	
+	2: // Clean Up
+	add $0x1D, %SP
+	//xor %EAX, %EAX
+	//mov %SI, %AX
+	pop %DI
+	pop %SI
+	pop %EBP
+	pop %EBX
 	retl
 
 a20check: .short 0x1234
